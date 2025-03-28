@@ -1,0 +1,588 @@
+See discussions, stats, and author profiles for this publication at: https://www.researchgate.net/publication/320542220
+Fashion World Map: Understanding Cities Through Streetwear Fashion
+Conference Paper · October 2017
+DOI: 10.1145/3123266.3123268
+CITATIONS READS
+22 6,967
+4 authors, including:
+Bo Wu Kai-Lung Hua
+MIT-IBM Watson AI Lab National Taiwan University of Science and Technology
+53 PUBLICATIONS 1,272 CITATIONS 177 PUBLICATIONS 3,100 CITATIONS
+SEE PROFILE SEE PROFILE
+All content following this page was uploaded by Bo Wu on 29 July 2019.
+The user has requested enhancement of the downloaded file.
+Session: Fast Forward 1 MM’17, October 23–27, 2017, Mountain View, CA, USA
+Fashion World Map: Understanding Cities Through Streetwear
+Fashion
+Yu-TingChang Wen-HaungCheng
+ResearchCenterforInformationTechnologyInnovation, ResearchCenterforInformationTechnologyInnovation,
+AcademiaSinica,Taiwan AcademiaSinica,Taiwan
+juliachang@citi.sinica.edu.tw whcheng@citi.sinica.edu.tw
+BoWu Kai-LungHua
+InstituteofComputingTechnology, CSIE,NationalTaiwanUniversityofScienceand
+ChineseAcademyofSciences,China Technology,Taiwan
+wubo@ict.ac.cn hua@mail.ntust.edu.tw
+ABSTRACT
+Fashion is an integral part of life. Streets as a social center for
+people’sinteractionbecomethemostimportantpublicstageto
+showcasethefashioncultureofametropolitanarea.Inthispaper,
+therefore,weproposeanovelframeworkbasedondeepneural
+networks(DNN)fordepictingthestreetfashionofacitybyauto-
+maticallydiscoveringfashionitems(e.g.,jackets)inaparticular
+lookthataremosticonicforthecity,directlyfromalargecollection
+ofgeo-taggedstreetfashionphotos.Toobtainareasonablecollec-
+tionoficonicitems,ourtaskisformulatedastheprize-collecting
+Steinertree(PCST)problem,wherebyavisuallyintuitivesummary
+oftheworld’siconicstreetfashioncanbecreated.Tothebestof
+ourknowledge,thisisthefirstworkdevotedtoinvestigatethe
+world’sfashionlandscapeinmoderntimesthroughthevisualana-
+lyticsofbigsocialdata.Itshowshowthevisualimpressionoflocal
+fashionculturesacrosstheworldcanbedepicted,modeled,ana-
+lyzed,compared,andexploited.Intheexperiments,ourapproach
+achievesthebestperformance(43.19%)onourlargecollectedGS-
+Fashiondataset(170Kphotos),withanaverageoftwotimeshigher
+thanalltheotheralgorithms(FII:20.13%,AP:18.76%,DC:17.90%),
+intermsoftheusers’agreementratioonthediscoverediconic
+fashionitemsofacity.Thepotentialofourproposedframework
+foradvancedsociologicalunderstandingisalsodemonstratedvia
+practicalapplications.
+Figure1:Streetfashionvariesthroughoutplace.FromLos
+CCSCONCEPTS Angeles to Cape Town, each city has a distinct style of
+•Socialandprofessionaltopics→Culturalcharacteristics; streetwearthatreflectsthecity’slifestyle(Thepicturesare
+•Computingmethodologies→Visualcontent-basedindex- searchedfromtheweb).
+ingandretrieval;•Informationsystems→Top-kretrieval
+indatabases;
+1 INTRODUCTION
+KEYWORDS Streets have been the social centers of towns and cities where
+peoplecometogether,congregateandinteractwithoneanother.
+Socialmedia;cityprofiling;streetfashion;visualbigdataanalysis
+AccordingtoarecentsurveybyUN-Habitat[8],streetstypically
+representthelargestareaofpublicspaceacityhas,i.e.,making
+Permissiontomakedigitalorhardcopiesofallorpartofthisworkforpersonalor
+classroomuseisgrantedwithoutfeeprovidedthatcopiesarenotmadeordistributed up30to35percentofacity’slandarea.Streetsarethusknownas
+forprofitorcommercialadvantageandthatcopiesbearthisnoticeandthefullcitation the‘thirdplace’betweenhomeandworkplaceinacityforpeople’s
+onthefirstpage.CopyrightsforcomponentsofthisworkownedbyothersthanACM
+socialgatheringsandbecomethemostimportantpublicstageto
+mustbehonored.Abstractingwithcreditispermitted.Tocopyotherwise,orrepublish,
+topostonserversortoredistributetolists,requirespriorspecificpermissionand/ora showcasethecity’sbestcultureandlifestyle[9].
+fee.Requestpermissionsfrompermissions@acm.org. Likefood,landmarksandlanguage,fashionisanintegralpart
+MM’17,October23–27,2017,MountainView,CA,USA.
+ofacity’scultureandhasnowbecomenotonlyanartofselfex-
+©2017ACM. 978-1-4503-4906-2/17/10...$15.00
+DOI:https://doi.org/10.1145/3123266.3123268 pressionbutamajorinfluenceinbusiness,financial,entertainment,
+91
+Session: Fast Forward 1 MM’17, October 23–27, 2017, Mountain View, CA, USA
+Figure2:Anoverviewoftheproposedframework.
+culturalandleisureactivities[7,14].Forexample,theglobalfash- networks(DNN)[31],namelytheDNNconfidence,toselectanum-
+ionapparelmarkettodayhassurpassed1trillionUSdollarssince berofpotentiallyiconicoutfitsforeachcity.Foreveryoutfits,we
+2013,andaccountsfornearly2percentoftheworld’sGrossDo- furthercalculateiconicscoresinafinerlevelbasedonfashionitems
+mesticProduct(GDP)[35].Thus,understandingthefashionlifeof (e.g.,‘jacket’,‘socks’,‘hat’,etc.).Next,weformulatethedetection
+citiesissociologicallysignificantandcanoffernewinsightsinto problemoficonicfashionitemsofacityastheprize-collecting
+culture-awarecommunityprofiling,analysis,andinnovation. Steinertree(PCST)problem[36],wherebytheproposedfashion
+AspointedoutbyBillCunningham1,oneoftheworld’sgreat worldmapcanbecreated.Finally,wedemonstratethathowour
+fashion photographers, streets are the runway of ordinary peo- frameworkcanbeappliedtoinferrichsociologicalinsightsfor
+ple.Streetfashion,orstreetwearfashion,iswhateverydaypeople enablingcreativeapplications.
+onthestreetarewearingandisawayofdistinguishingonecity Tothebestofourknowledge,thisisthefirstworkdevotedto
+fromanother[13].Figure1showssomestreetfashionphotosfrom investigatetheworld’sfashionlandscapeinmoderntimesthrough
+sixworld-famouscities.Forexample,Milanhasamuchdifferent thevisualanalyticsofbigsocialdata.Itshowshowthevisualim-
+fashionscenethanBerlin.TheMilanstyleusesvividpatternsand pressionoflocalfashionculturesacrosstheworldcanbedepicted,
+flamboyantcolors,whiletheBerlinstylefavorsdarkcolorsand modeled,analyzed,compared,andexploited.Theproposedframe-
+amoregrungylook.Whenstudyingthefashioncultureofcities, workisbelievedtobegenericandcanbeademonstrativeexample
+traditionalapproacheshaveoftenreliedonfree-textcomments toadvancedunderstandingofothersocialaspectsinlife,especially
+offashionexperts[14].Aknownproblemwithdescriptivecom- forthoseofvisualnature.
+mentsisthattheytendtobedescribedasgenericandvague[28], Intherestofthispaper,section2providestheliteraturereview.
+e.g.,“thetypicalParisianstyleisallabouteffortlesseleganceand Section3presentsthecollecteddataset.Sections4and5describe
+character”byaFrenchfashiondesigner,JuliedeLibran.Infact, theproposedmethodsforiconicoutfitselectionandfashionmap
+assuggestedbycognitivefindings[1],anaturalwaytoexplore generation,respectively.Section6givestheexperimentsandSec-
+aconcept,especiallyoneofvisualnaturelikefashion,istolearn tion7concludesthisworkanddiscussesfutureresearchdirections.
+fromseeing[27].Thismotivatesourresearchquestions:Howdo
+wemakeintuitivefashionprofilesofcities?Howcanthefashion 2 RELATEDWORK
+profilesbeappliedforinferringadvancedsocialknowledgeaswell
+Fashionitemextractionisafundamentaltaskinvisualanalytics
+asenablingcreativeapplications?
+forfashionimages,wherebytheresultscanbefurtherexploited
+Inthispaper,therefore,weproposeanovelframework(cf.Fig-
+for exploring social insights in different societal levels from an
+ure2)fordepictingthestreetfashionofaplacebyautomatically
+individualtoagroupofindividuals.Therefore,wedividetherelated
+identifyinganumberoffashionitemsinaparticularlook(e.g.,
+work into the following three lines of aspects, i.e. fashion item
+women’sminiskirtswithblackandredstripes)thataremosticonic
+extraction,individual-levelsociologicalunderstanding,andgroup-
+fortheplace,directlyfromalargedatabaseofgeo-taggedstreet
+levelsociologicalunderstanding.
+fashionphotos.Notethat“iconic”heredoesnotmeannecessar-
+Fashion Item Extraction. Extensive previous research has
+ily unique to a place but may be shared with other places, e.g.,
+been focused on object based clothing image analysis, such as
+becauseofculturalinteraction[13].Wefirstconstructalarge,com-
+clothingmodeling,recognition,parsing,retrieval,andrecommen-
+plex,andreal-worldcollectionofstreetfashionphotosfroman
+dations[19].Yamaguchietal.[41]presentedahybridmethodby
+image-centeredsocialmediasite,Lookbook.nu2,resultinginatotal
+combiningdifferentmodelstoperformpixel-levelclothingpars-
+numberofover400Kuser-contributedphotosfrom45citiesworld-
+ing.Liuetal.[20]presentedfashionlandmarkdetection.Wanget
+wide.Afterclothingsegmentation[41],thereare170Kphotoswith
+al.[38]developedapersonalizedgarmentrecommendersystem
+full-bodysubjects,andwedeviseametricbasedondeepneural
+basedonfuzzylogics.Jiaetal.[16]exploredtherelationshipbe-
+tweenvisualfeaturesandaestheticwordsofclothing.Chenand
+1https://en.wikipedia.org/wiki/Bill_Cunningham_(American_photographer) Luo[5]discoveredfine-grainedclothingattributesastherepresen-
+2http://lookbook.nu tativeanddiscriminativecharacteristicsofpopularclothingstyle
+92
+Session: Fast Forward 1 MM’17, October 23–27, 2017, Mountain View, CA, USA
+Figure3:TheGSFashion(GlobalStreetFashion)imagedatasetconstructedinthiswork,withatotalnumberof400,822local
+streetfashionpicturesfrom45globalmajorcities:(a)asampleimagewiththerecordedinformationand(b)theselectedcities
+coveringthefivecontinentsoftheworld.
+elements.Veitetal.[34]learnedavisualcompatibilityacrossdiffer- IntheGSFashiondataset3,wecollectedtotally400,822local
+entcategoriesoffashionitemstoidentifyitempairsofsimilarstyle. streetfashionpicturesover45globalmajorcities,assummarized
+Kiapouretal.[17]createdanapplicationtomatchareal-world inFigure3(b).Foreachimage,wealsorecordedsixtypesofthe
+exampleofagarmentitemtothesameiteminanonlineshop. associatedinformation:(1)cityname,(2)anonymizeduserID,(3)
+Simo-Serra and Ishikawa [30] extracted discriminative features anonymizedpostID,(4)postingdate,(5)numberoflikesofthepost,
+ofclothingimagesbyjointrankingandclassification.Morriset and(6)user-providedmetadatadescribingthecategoriesoffashion
+al.[24]discussedthecrowdsourcingschemeforgeneratingremote items included in the image (e.g., ‘jeans’) along with the brand
+shoppingadvicebasedonsocialnetworkingsites. names (e.g., ‘Stella McCartney’) and the brand-defined product
+Individual-Level Sociological Understanding. User profil- categories(e.g.,‘StellaMcCartneyDenimJeans’),cf.Figure3(a).
+inghelpspersonalizationandhasreceivedmuchattentioninthe Notethatsinceourfocusisonpeoplewhoarereallyresidentsof
+socialmultimediaresearchfields.Nguyenetal.[26]estimatedfe- acitybutnottouristsorvisitors,wecollectedpicturesforeach
+maleattractivenessbyusingaudiovisualcueslikedressing,face, city only from users who have the same registered location on
+andvoice.Chenetal.[6]exploitedconvolutionalneuralnetworks Lookbook.nutothecurrentcity.
+(CNN) for describing people based on fine-grained clothing at- Incomparisontoexistingfashionrelatedimagebenchmarks,
+tributes.Simo-Serraetal.[29]analyzedhowfashionableaperson suchasFashion10000[22]andPaperDoll[41],ourGSFashion
+looksonaphotowherebyadvisingtheusertoimprovetheappeal. datasetissuperiorbyalsoofferinggeo-socialinformationforevery
+Songetal.[32]predictedtheoccupationofapersonviathecloth- images, e.g., locations, likes, and brand names of fashion items.
+ing.Heetal.[12]appliedcollaborativefilteringtobuildtheuser’s Forouranalysislaterintheexperiments,werunaclothingpars-
+fashion-awarepersonalizedrankingfunctionsoffashionitems. ing tool [41] for each image in the GSFashion dataset as a pre-
+Group-LevelSociologicalUnderstanding.Agroupisacol- processingsteptoexcludethoseimageswherethemodelsdonot
+lectionofindividualsandgroup-levelanalysisenablesustocapture haveafullbodyposeorhavetoomanyoccludedbodyparts.This
+majortrendsinthesociallifeofgroupsofpeople[15,39,40,43]. resultsin170,180remainingpictures.
+Hidayatietal.[14],Chenetal.[4],Vittayakornetal.[37]andMaet
+al.[23]analyzedthevisualevolutionofclothingfashionsasare- 4 CITYBASEDSELECTIONOFICONIC
+flectionofthesocietyofaperiod.Murilloetal.[25]determinedthe OUTFITS
+socialsubcultureorurbantribeforpeopleingroupphotos.Zhouet
+Onacitystreet,peoplewearallkindsofclothingbutnotevery
+al.[44]describedacityintermsofthespatialform(e.g.,green
+outfitsfitthecommondressstylesofthelocalarea.Inthissection,
+spacecoverage)andthesocialfunctionality(e.g.,athleticactivity),
+weproposetoexploitdeepneuralnetworks(DNN)[31]asaselector
+byusinghigh-levelattributesextractedfromthecorresponding
+todistinguishpotentiallyiconicoutfitsindifferentcities.
+geo-taggedimages.Similarly,Geetal.[11]developedavision-based
+People’soutfitsareasortofvisualpresentationconsistedof
+approachforrecognizingthehigh-levelinterestcategoryofacity,
+severalbasiccomponentswhichareavarietyoffashionitems.As
+e.g.,sportsandpolitics.
+suggestedby[41],thereare53definedcategories4offashionitems.
+Forexample,amanwhomanagestohaveacasuallookoutfitmay
+wearT-shirt,shortsandsunglasses;awomanwhoattendsaparty
+3 DATASET
+mayholdapurseandbeattiredinbodycondressandhighheels.
+Toevaluatetheeffectivenessofourapproachatcapturinglocal LetXCi representtheoutfitchoiceofapersoninthecityCi.To
+fashionculturesonaglobalscale,webuildaGSFashion(Global modelXCi ,wedefineXCi asacollectionofN randomvariables
+StreetFashion)imagedatasetbycrawlingalargenumberofstreet X1 ,...,XN representingtheadopted53categoriesoffashionitems
+fashionphotosfromLookbook.nu,asocialnetworkingwebsitethat
+Ci Ci
+allowspeopletopostandsharetheirstreet-stylefashionlooks.By
+2017,Lookbook.nuhasover3millionuniquevisitorsandover75 3WewillmaketheGSFashiondatasetpublicafterourpaperwasaccepted.
+millionpageviewspermonth. 4Intheoriginaltaxonomyof[41],thereare56definedcategoriesbutwediscardthe
+threeonesunrelatedtofashionitems,i.e.‘background’,‘skin’,and‘hair’.
+93
+Session: Fast Forward 1 MM’17, October 23–27, 2017, Mountain View, CA, USA
+(N =53),sothattheprobabilityofaspecificoutfitv=v1,...,vn is
+P(XCi =v|Ci)=P(X
+C
+1
+i
+=v1,...,X
+C
+n
+i
+=vn |Ci), (1)
+whereX j =nullifnoitemofthej-thcategoryisincludedinthe
+Ci
+outfitv,e.g.,apersondoesnotwearahat.
+Sincetheiconicoutfitofacitycanbedescribedasthemost
+commondressstyle,ourgoalisthentoselectthemostprobablev
+astheiconicoutfitbylearningamodelofP(XCi |Ci)onthetraining
+imagedataset:
+v= argmax P(XCi |Ci). (2)
+X1 ,...,XN
+Ci Ci
+Conventionally,ajointprobabilityfunctionwillbefactorizedto
+Figure4:SampleoutfitimagesfromtheGSFashiondataset,
+simplifytheanalysis[33],asbelow:
+wheretheleftandtherightgroupsarerespectivelyimages
+P(XCi |Ci)=Πn j=1 P(X C j i |Ci). (3) i t n op cl - u 5 d 0 e s d el a e n c d tio ex n c c lu an de b d e in ob t s h e e rv to e p d - t 5 o 0 g s i e v le e c a ti s o t n ro .I n m ge a r ge s s en o s f e th o e f
+j
+However,X arenotindependentvariablesandthefactorization clothingstylethanimagesthosearenotselected.
+Ci
+isnotvalidinourcase.Thatis,aperson’schoiceonpartofan
+outfitusuallydependsontheotherparts.Forexample,it’smore TheideahereissimilartotheuseofDNNconfidenceinSection4.
+oftentochoosesuitpantsratherthanshortstomatchasuitjacket Thatis,ifalocationismoreiconicofthecity,itwouldleadtoa
+fortheoutfit. strongeractivationofoneormultipleofthefilters.Wechooseto
+Therefore,insteadofdirectlycomputingP(XCi |Ci),wechooseto applythepixel-wisemaxoperatortothefeaturemapsq1,...,qp
+learnaDNNbasedcityclassifierϕforallthesegmentedoutfitsfrom altogether,becausewewanttoexaminethestrongestactivation
+theGSFashiondataset(cf.Section3).Thedetailedconfigurations associatedwithalocationregardlessofwhichfiltersthisquantity
+oftheDNNarchitecturearereferredtoSection6.Foreachoutfit iscomingfrom.Thus,foreachfashionitemofanoutfit,itsiconic
+vinthecityCi,wethentakethepredictionscoreofhowlikely scorecanbeassignedbytheaverageofallpixel-wiseiconicscores
+itbelongstoCi fromthesoftmaxlayerintheDNN,namelythe overthecorrespondingspatialextentinq∗.
+DNN confidence, as the approximated value of P(XCi = v|Ci). Basedontheitem-wiseiconicscores,anaivesolutiontodetect
+Theideahereis,ifanobjectismorerepresentativeofitsclass,it theiconicfashionitemsofacityistoranktheitemsandreturn
+wouldbemoreconfidentthatwecanclassifytheobject.Rigorously thetop-k ones.However,thereturneditemscanbetoodifferent
+speaking,theDNNconfidenceandP(XCi |Ci)arenotthesame.In fromeachother,intermsoftheitemcategoryorthevisualstyle.
+otherwords,wedonotattempttoreplaceP(XCi |Ci)bytheDNN Thisisnotdesiredbecausetheresultsdonotreallygiveasense
+confidence.WearemostinterestedinusingtheDNNconfidenceas of the iconically mainstream fashion but simply a collection of
+analternativeandefficientmetricfortheselectionofpotentially diverseitems.Toaddressthischallenge,weproposetoformulate
+iconicoutfits.Finally,foreachcity,thetop-koutfitswithhighest thedetectionproblemoficonicitemsastheprize-collectingSteiner
+DNNconfidencesarereturnedastheresults.Intheexperiments, tree(PCST)problem[36].LetG = (V,E) denotetheitemgraph,
+wechoosek =50,cf.Section6.Sampleoutfitimagesofthetop-50 whereV isasetofnodesandE aretheedges.Accordingtothe
+selectionaregiveninFigure4. definition of PCST problem [36], given a connected undirected
+graphGwithpositiverealnodeweights,κ :V →(cid:60)≥0,andpositive
+5 FASHIONWORLDMAPGENERATION realedgeweights,γ :E→(cid:60)≥0,theobjectiveistofindaconnected
+Afteranumberofpotentiallyiconicoutfitswereextractedfrom subgraphR = (VR ∈V,ER ∈ E)ofG whosetotalprofitscoresΦ
+acity,thissectiondevotestogaindeeperinsightsintowhatcom- aremaximal:
+(cid:88) (cid:88)
+positionalelementsmaketheoutfitstobeiconic.Toanswerthis Φ(R)=max{ κ(v)− γ(e)}. (5)
+question,wecalculateiconicscoresforallfashionitemsparsed
+v∈VR e∈ER
+fromtheextractedoutfits[41],wherebyanumberofhigh-score
+SincethePCSTproblemcanbeformulatedasanintegerlinear
+itemscanbeselectedforgeneratingavisualsummaryofthecity
+program(ILP),itcanbeefficientlysolvedwithabranch-and-cut
+basedstreetfashion,knownastheproposedfashionworldmap.
+algorithm[21].
+First,foranoutfitimage,wecalculateiconicscoresinpixellevel
+Specifically,foreachcity,weconstructanitemgraphfromall
+byexploitingtheDNNvisualizationtechnique[42].LettheDNN
+theparsedfashionitemsofthetop-50outfitimages,cf.Section4.
+classifierϕhaspfilterso1,...,op inthefirstlayer.Whenanoutfit
+Each item is represented by a graph node, and a prize (i.e. the
+imageisinputtedintoϕ,pcorrespondingfeaturemaps(activations),
+correspondingitem-wiseiconicscore)isassociatedwiththenode.
+q1,...,qp, can be obtained [31]. Given (cid:12) as the pixel-wise max
+Anedgeisplacedbetweenanytwonodesandtheedgeweight
+operator,allfeaturemapsarethencombinedintoauniquescalar
+is determined by the style descriptor [41]. Therefore, the PCST
+“iconicmap”,q∗,whichencodesfortheiconiclevelofalocationin
+solutionaimstodeterminewhichnodes(items)asacollectionwill
+theoutfitimage:
+giveacompactsubgraphthatgivesthebest“prize”.Thatis,we
+q ∗=q1 (cid:12)q2 (cid:12)...(cid:12)qp. (4) hopethattheselecteditemsnotonlyhavehighiconicscoresbut
+94
+Session: Fast Forward 1 MM’17, October 23–27, 2017, Mountain View, CA, USA
+alsosimilartoeachotherinstyle.Thecollectioncanthenbetaken
+asourresultanticonicfashionitemsofthecorrespondingcity.The
+proposedfashionworldmapcanbecreated,cf.Figure7.
+6 EXPERIMENTS
+Inthissection,wefirstgivetheexperimentalsettingsinSection6.1.
+WethenpresenttheexperimentalresultswithdiscussionsinSec-
+tion6.2.Next,sociologicalinsightsfromourstudyareinvestigated
+inSection6.3.Finally,inSection6.4,extendedapplicationsofour
+proposedframeworkisdemonstrated.Forexplanationpurposesin
+thissection,leti50denotetheimagecollectionoftop-50selection
+overallcitiesintheGSFashiondataset(c.f.Section4).
+6.1 ExperimentalSettings
+6.1.1 DNNConfigurations. WeimplementedtheVGG19model[31]
+asthemainarchitectureofourDNNclassifierinSection4,and
+trained the model on the GSFashion dataset. Briefly, the model
+has16convolutionallayers(2with64filters,2with128filters,4
+with256filters,and8with512filters)and2fullyconnectedlayers. Figure5:Thestatisticalresultsoftheuserstudy,evaluated
+SincetheoriginalVGG19modelaimsatworkingonalargerimage bytheARperformance.(SeeSection6.2.1fordetails)
+collection(i.e.ImageNet,abenchmarkofover14millionimagesin
+1,000classes),weslightlymodifiedtheVGG19modelbyreducing imagescontainingpeopleastheimagesamplesofthecity.Then
+thewidthofthefullyconnectedlayersfrom4,096to1,024tomake aparticipantisallowedtofreelyexploretheimageswithnotime
+themodelmorefittothescaleofourdataset.Consequently,the limit.Notethatwedonotgiveanytextandoralexplanations.After
+lossandtheaccuracyare0.3723and89.68%,respectively. that,theparticipantscanstarttofilloutthequestionnaire.
+On-studyPhase:Wefocuson45citiesinthiswork,sothereare
+6.1.2 PerformanceComparisonwithDifferentMethods. Tovali-
+altogether45questionsinthequestionnaireandeachquestionisas-
+datetheeffectivenessofourapproach,weadoptedthefollowing
+sociatedwithonecity.Ineachquestion,thecitynameisprompted
+methodsforcomparison.Inthesemethods,weadoptedtheclothing
+andtherearefourvisualoptions,witheachcorrespondingtotheex-
+featuresfrom[41].
+tractediconicitemgeneratedbyoneofthefourcomparingmethods.
+FindingIconicImage(FII)[2]:FIImethodisusedtoautomat-
+Thegeneratingmethodofeachoptionisblindtotheparticipants
+icallyfindrepresentativeimagesofaspecifiedobjectcategory.This
+andthedisplayorderofthefouroptionsisrandomlyanddynami-
+methodisbasedonk-meansandtheclustercentersareselectedas
+callydetermined.Theparticipantsneedtochooseoneoptionthat
+theiconicexamples.
+theythinkitismostlikelytheclothingstyleofthecity.
+AffinityPropagation(AP)[10]:APmethodcanclusterthe
+inputsetautomaticallyandfindthemembersthatarerepresentative 6.1.4 EvaluationMetric:AgreementRatio. Theagreementratio
+ofthecluster.Thisapproachdoesnotrequirethenumberofclusters (AR)isadoptedastheevaluatonmetrictoassesstheperformance
+tobedeterminedorestimatedbeforerunningthealgorithm. ofeachmethod.Supposetherearemparticipantsintheuserstudy,
+DiscriminativeClustering(DC)[9]:DCmethodcanfindvi- foramethodonacity,therearenparticipantschoosingthemethod.
+sualelementsthataremostdistinctiveforacertaingeo-spatialarea. TheARperformanceofthismethodonthecitycanthusbedefined
+Adiscriminativeclusteringapproachisusedtoachievegeographic asn/m.Givenkcitiesintotal,wecanderivetheaverageagreement
+supervision.Theiconicpatternofacityisassumedtosatisfyboth ratio(AAR)ofthemethodas
+frequentlyoccurringandgeographicallydiscriminative.Thatis,
+thecharacteristicissupposedtoappearrepeatedlyinthatlocale AAR=
+1(cid:88)k
+ARi. (6)
+andseldomlyappearelsewhere. k
+i=1
+6.2 Results
+6.1.3 UserStudyEvaluationProtocol. Sincefashionissubjective,
+weconductedtheuserstudytoevaluateourresults.Afterfinding 6.2.1 ARPerformance. Fromtheuserstudy,theAARofour
+the iconic items of each city, we designed a questionnaire and approachis43.19%andthenumberistwotimeshigherthanother
+randomlyinvited70peoplefromourcampusastheparticipants methods(i.e.FII:20.13%,AP:18.76%,DC:17.90%).FIIandAPare
+(29malesand41females,withanaverageageof27.6).Thewhole methodsbasedonunsupervisedclustering,usingvisualproper-
+studyprocesswasdividedintotwophases:pre-studyphaseand tiestofindtherepresentativeimage.Incontrast,DCappliesgeo-
+on-studyphase. supervisiontodiscoverthediscriminativeobject,wheretheiconic
+Pre-studyPhase:Thepre-studyphaseistogivetheparticipants patternisassumedtobeoccurmuchoftenintheparticularcitythan
+some general ideas of the clothing style of each city. First, we othercities.However,theAARperformancesofthesecomparing
+collectanumberofsampleimagesusingtheGoogleImageSearch methodsareallatarelativelylowlevel,aroundonly20%.
+(images.google.com).Foreachcity,weusedthecitynameplustwo Togetadeeperinsightintotheresults,wesortedthe45citiesinto
+words“streetlife”toissueasearchqueryandreturnedthefirst50 threegroups(Top-15,Middle-15,Last-15)bytheARperformance
+95
+Session: Fast Forward 1 MM’17, October 23–27, 2017, Mountain View, CA, USA
+Figure6:Avisualcomparisonoftheiconicitemsfoundbyfourdifferentmethods(i.e.Ours,FII[2],AP[10],DC[9]).There
+are15citiesrandomlyselectedfromTop-15,Middle-15andLast-15,respectively.
+ofourapproach,asshowninFigure5.WecanfindthattheTop-15 byourapproacharebelievedtobeaneffectivereflectionofthe
+citiesarethosewithamoredistinguishableclothingstylelikeBerlin, leadingfashionofacity-scalehumancommunity.
+SeoulandDubai,ortheyareconventionallyknownasfashionable
+city like London and Milan. The Top-15 AAR of our method is
+56.05%, even higher than our overall AAR (43.19%). It suggests 6.2.3 FashionWorldMap. Thefashionworldmapgenerated
+that,withresepecttotheothercomparingmethods,ourapproach byourapproachisshowninFigure7.Anumberofinteresting
+is more effective to discover the fashion elements of the locale. observations can be made from our fashion world map. Firstly,
+TheMiddle-15AARofourmethodis43.52%.Wearethemajority each of the cities has a different iconic dress style that reflects
+choiceoftheparticipantsintheuserstudy.TheLast-15AARofour the local culture and lifestyle [13]. For example, Miami fashion
+methodisstillthehighestamongallmethods,althoughdecreasing andRioDeJaneirofashionaresimilarlyform-fittingsilhouettes
+to29.99%.Basedonourobservations,theLast-15citiesaremostly thatflatterthebody’scurvesandthelacefabricisusuallyused,
+multiculturalcity,suchasHongKong,IstanbulandCasablanca, wherethebothplacesarelargelyaffectedbytheLatinAmerican
+withamixofmultiplecultures.Anotherreasonleadingtothelower culture.Secondly,climateisanotherimportantbutimpliciteffect
+performancemightbethelackofclothingcharacteristics,i.e.,the onthestreetfashion.ThecityofOsloisinhigh-latitudeareasand
+localclothingstyleisnotexplicitenough.Thisreasonmightcause itsfashionisblackorwhitecoatswhichcanhelptokeepoutthe
+theoutfitstylecannotbeeasilydistinguishedbytheuserstudy cold.TheplaincolorsalsoconveytheScandinavianMinimaliststyle.
+participants.Overall,theresultsofourapproachareencouraging. DifferentfromOslo’swarmclothing,Tokyo’sfashionismuchthiner
+black-and-whiteblazersandshirts.Thisstyleisatypeofbusiness
+6.2.2 VisualComparison. Theiconicitemsdiscoveredbydif-
+attireandwouldreflectthedisciplinarynatureofJapaneseculture.
+ferentmethodsforsomecitiesareshowninFigure6.Generally,
+Besides,religionalsoplaysaroleinsociety.Forexample,Islamis
+theiconicitemsfoundbyourapproachhaveamoreconsistent
+thestatereligionofMalaysiaandtheiconicitemsofKualaLumpur
+style,e.g.,theymighthavesimilarcolorsortheymightbethesame
+areunsurprisinglyfoundtobetheislamicheadscarf.Insummary,
+clothingitemsuchasdress,skirtorcoat.Incontrast,thediscov-
+beyondtheconventionalwayofliterallynaming,theproposed
+erediconicitemsbytheothermethodsareveryvisuallydiverse
+fashionworldmapisanovelandintuitivetoolforempoweringthe
+andlackingofconsistency.Consideringthefactthatourapproach
+‘seeingisbelieving’capabilityofsociologicalunderstanding.
+achievesthebestAARperformance,theiconicitemsdiscovered
+96
+Session: Fast Forward 1 MM’17, October 23–27, 2017, Mountain View, CA, USA
+Figure7:Avisualoverviewoftheworld’siconicstreetfashion,with15selectedcitiesasexample.
+6.3 ObservationsandInsights
+6.3.1 Finding1:CorrelationofClothingColorandCityLatitude.
+Todevelopmoreinsightsintosociologicalunderstandingofstreet
+fashion,wearrangedthe45citiesinorderoflatitude,witheachis
+representedbythreedominantcolorsextractedfromallthecorre-
+spondingoutfitimagesini50.TheresultsareshowninFigure8.It’s
+revealedthattheclothingcolorandthecitylatitudearecorrelated.
+Inhigherlatitudeareas,themaincolorsofclothingarecoolcolors
+andtheearthtone5.Relatively,inequatorialregions,theclothing
+colorisdominatedbybrightcolorslikered,orange,andyellow.In
+fact,thecolorconveysmeaningsintwoprimaryways–natural
+associationsandpsychological(culturual)symbolism.
+First,itisknownthatclimateisanimportantfactoraffecting
+thecoloroftheclothing.Accordingtopsychologicalevidence[3],
+peoplewholiveinclimateswithabundantsunlightpreferwarm
+brightcolors,whilethosefromclimateswithlesssunlightprefer
+Figure8:Clothingcolorversuscitylatitude.Threedominant
+coolerandlesssaturatedcolors.Ourresultsareinaccordancewith
+colorsareextractedfromeachofthe45citiesintheGSFash-
+thisfact.Second,colormaygenerateanotherlevelofmeaninginthe
+ion dataset and arranged on the latitude line of the corre-
+mindandthissymbolismarisesfromculturalcontexts.Forinstance,
+spondingcity.Forexample,thecityofHelsinkiistheonly
+redisthecolorofjoyandcelebrationintheEast.InChina,itisoften
+oneat+60o latitudeanditsthreedominantcolorsareblack,
+thecolorwornbybrides,andinIndia,redisthecolorforpurity.
+blue,andwhite.Notethatifonecolorissharedbytwocities,
+Wecanfindthatredtonecolorsarewidelydistributedintheareas
+thecolorcirclewillbeplacedtwice.Inourcase,mostEastern
+whereaffectedbyEasternculture.Also,inAsiancultures,yellow
+cities(i.e.Asia,SoutheastAsiaandMiddleEast)arelocated
+isconsideredsacredandimperial,anditismorewidelyconnected
+atbetween−15o and+35o latitude.Westerncities(i.e.North
+tohappinessandprosperityintheMiddleEast.Onthecontrary,
+AmericaandEurope)areabove+35o latitudeandthecities
+inLatinAmerica,yellowisassociatedwithdeathandmourning.
+ofLatinAmericaliebetween−20o and−40o latitude.
+Accordingtoourresults,yellowisnotcommoninthecitiesof
+LatinAmerica.Globallyspeaking,thecolorblueisconsideredto
+bethesafestandmostpositiveofallthecolors.Truly,asshownin becauseourstatisticsindicatethattheyarethetop-4biggestbrands
+Figure8,blueseemstodistributeineachdifferentcultureevenly. ini50.H&MisfromSweden,ZARAisfromSpain,Forever21is
+fromUSA,andTopshopisfromUK.H&MandZARAarealsothe
+6.3.2 Finding2:InfluenceofInternationalClothingBrandson twolargestapparelretailersintheworld6,7.
+Local Fashion. We utilize the brand names of clothing items in
+Forexplanationpurposes,wedefineaspecialformatN:I(R),e.g.,
+theGSFashiondataset(cf.Section3)toinvestigatetheeffectof
+“ZARA:1(2)”,toshowthepopularityofabrandinacity,whereNis
+globalizationonthestreetfashionacrossdifferentcities.Wefocus
+thebrandname,Irepresentsthenumberofoccurrencetimesofthe
+onfourparticularbrands,i.e.,H&M,ZARA,Forever21andTopshop,
+6https://en.wikipedia.org/wiki/Zara_(retailer)
+5https://en.wikipedia.org/wiki/Earth_tone 7https://en.wikipedia.org/wiki/H&M
+97
+Session: Fast Forward 1 MM’17, October 23–27, 2017, Mountain View, CA, USA
+Figure 9: Brand influence in the fashion world. (See Sec-
+tion6.3.2fordetails)
+brand’sitemsinthecity,andRstandsfortherankofthenumber
+Ifromallcitiesinthesamecontinent.Intheworldmap,foreach Figure10:Ademonstrationofourproposedframeworkfor
+brand,weconnectthebrand(representedbyitsplaceoforigin)to socio-demographic analysis of wearing style on the street.
+everycitieswithanedgeandtheedgewidthisproportionaltothe Foreachperson,wedisplaythefourhighestpossibilities.
+Ivalueofthecityconnected.OurresultsareillustratedinFigure9.
+AsshowninFigure9(a),H&MandZARAdistributeextensively intosmaller,morespecificblocksofcustomerswithuniqueneeds.
+overtheworld,andtheaverageIofthemare10.38and10.36,respec- Toserveasacomplementtotraditionalvisualanalyticsthatutilize
+tively.Iftheaverageiscalculatedbycontinent,thelargestvaluesof intrinsicuserattributessuchasgender,ageorfacerecognitionfor
+thetwobrandsarebothinEurope,i.e.15.17and14.00,respectively. analysispurposes[18],wecanprovidesemanticinformationabout
+Ontheotherhand,inFigure9(b),theworldwidedistributionofFor- auserviaextendingourframeworkfromcity-levelstyleextraction
+ever21andTopshoparenotaswidespreadaslikeH&MandZARA. intopersonalstylepreferenceprediction.Inparticular,wecanuse
+TheaverageIareonly3.01and2.33,respectively.Similarly,ifthe theiconicoutfitmodellearntinSection4toestimateaperson’s
+averageiscalculatedbycontinent,thelargestvalueofForever21is wearingstyleonacitybasis.Forexample,givenastreetphoto
+inNorthAmerica(8.13),whileTopshop’sis2.89inEurope.Thisfact takeninNewYorkasshowninFigure10,wedetectfivepeopleand
+mightimplythatthesetwobrandsdevelopedmoreregionaland makethepredictionofthem.Asaresult,itisdemonstratedthat
+closetotheoriginalcountry,giventhatForever21isanAmerican ourproposedframeworkcanhelptoprofilethefashiontasteofthe
+brandandTopshopisaBritishone. customersandoffersmartinsightsembeddedwithinthepicture.
+Wealsoobservethat,notonlytheoriginofthecompanywill
+affectthedistributionofthebrand,buttheculturalcontextswill 7 CONCLUSIONSANDFUTUREWORK
+doso.Forexample,HongKonghasthelargestIinAsiaforboth
+Inthispaper,weproposedanovelframeworkbasedondeepneural
+H&MandZARA,i.e.,H&M:27(1),ZARA:15(1).Thismaybecause
+networks(DNN)forunderstandingbigsocialdatafromthefashion
+HongKongistheworld’slargestre-exportcenterandfrequently
+perspectiveanddemonstrateditspotentialforenablingadvanced
+describedasaplacewhere“EastmeetsWest”,reflectingthemix
+applications.Tothebestofourknowledge,thisisthefirstwork
+cultureofChineserootsandBritishcolony.Therefore,wecandis-
+devotedtoinvestigatetheworld’sfashionlandscapeinmodern
+covertheculturaldiversityofHongKongthroughthedistribution
+timesthroughthevisualanalyticsofbigsocialdata.Itshowshow
+ofclothingbrands.AnothercaseisIstanbul.Ourresultsshowthat
+thevisualimpressionoflocalfashionculturesacrosstheworldcan
+allEuropeanbrandsherehavearelativelylargerIthanotherAsian
+bedepicted,modeled,analyzed,compared,andexploited.
+cities(i.e.,H&M:16(2),ZARA:15(1),Topshop:7(1)).AlthoughIstan-
+Severalresearchtopicsareforfutureinvestigation.Thefirstand
+bulstraddlesbothEuropeandAsia,wecaninferthatthedressstyle
+mostobviouslimitationisthelackofobjectiveevaluations.Fashion
+ofIstanbuldeeplycomesundertheinfluenceofEuropeanculture.
+isaninherentlysubjectiveandculturalnotionanditisessentially
+Moreover,wecanobservetheriseoffastfashion8throughthe
+difficulttobedefinedbyquantitativemeasures.Advancedveri-
+statistics.Thefourbrandswefocusonareallprominentfastfashion
+ficationtechniques,e.g.,culturalmapping9,willbeinvestigated.
+brandsintheworld.Fastfashioncanbedefinedaslowcostclothing
+Currently,ouranalysisfocusesontheclothingoutfit,theincor-
+collectionsthatmimiccurrentfashiontrends.Accordingtoour
+porationofothercontextualfactors,suchasface,gender,ageor
+statistics,luxuryfashionbrandsarenotcommonandthegarments
+skincolor,mightbeusefultohelpimprovetheanalysisquality.
+offastfashionbrandsaremuchmorepopular.Thisgivesstrong
+Besides,wecanextendourapproachasanIoTgadgettoachieveper-
+supporttothefactthatstreetfashionismorerepresentativeofa
+sonalprofiling,e.g.,beingimmersedintothedailylivesofpotential
+humansocietythancatwalkfashion.
+customerstoprobepersonalizedinformation,suchasnationality,
+socialstatusandpreference.Creativeapplicationslikebrandlocal-
+6.4 Applications
+izationcanberealized.People’svaluesandbehaviorsareshaped
+Inthissection,wedemonstratehowourresearchoutputcanbe
+bytheuniquecultureinwhichtheylive.Brandcanformulatea
+exploitedtobenefitawiderangeofpracticalapplications.Forexam-
+localizationstrategybyunderstandingtheiconicstyleinacity,and
+ple,usermodelingisapowerfultechniqueinbusinessintelligence
+modifyingcontenttosuitthetastesandconsumptionhabitsofit.
+toachievemarketsegmentationwhichcanbreakthemarketdown
+8https://en.wikipedia.org/wiki/Fast_fashion 9https://en.wikipedia.org/wiki/Cultural_mapping
+98
+Session: Fast Forward 1 MM’17, October 23–27, 2017, Mountain View, CA, USA
+REFERENCES
+[23] YihuiMa,JiaJia,SupingZhou,JingtianFu,YejunLiu,andZijianTong.2017.
+[1] 1913.OneLookIsWorthAThousandWords.PiquaLeader-Dispatch.(1913). TowardsBetterUnderstandingtheClothingFashionStyles:AMultimodalDeep
+[2] TamaraL.BergandAlexanderC.Berg.2009.FindingIconicImages.InCVPR. LearningApproach.InAAAI.
+[3] MarioDeBortoliandJesusMaroto.2001.Coloursacrosscultures:Translating [24] MeredithRingelMorris,KoriInkpen,andGinaVenolia.2014.RemoteShopping
+coloursininteractivemarketingcommunications.InELICIT. Advice:EnhancingIn-StoreShoppingwithSocialTechnologies.InCSCW.
+[4] K.Chen,K.Chen,P.Cong,W.H.Hsu,andJ.Luo.2015. Whoarethedevils [25] A.C.Murillo,I.S.Kwak,L.Bourdev,D.Kriegman,andS.Belongie.2012.Urban
+wearingpradainnewyorkcity?.InACMMultimedia. Tribes:AnalyzingGroupPhotosfromaSocialPerspective.InCVPRWorkshop.
+[5] Kuan-TingChenandJieboLuo.2016.WhenFashionMeetsBigData:Discrimi- [26] TamV.Nguyen,SiLiu,BingbingNi,JunTan,YongRui,andShuichengYan.2012.
+nativeMiningofBestSellingClothingFeatures.InWWW. SenseBeautyviaFace,Dressing,and/orVoice.InACMMultimedia.
+[6] Qiang Chen, Junshi Huang, Rogerio Feris, Lisa M Brown, Jian Dong, and [27] RahulRaguramandSvetlanaLazebnik.2008.ComputingIconicSummariesof
+ShuichengYan.2015.DeepDomainAdaptationforDescribingPeopleBasedon GeneralVisualConcepts.InCVPRWorkshop.
+Fine-GrainedClothingAttributes.InCVPR. [28] Boon-SiewSeah,SouravSBhowmick,andAixinSun.2014.PRISM:Concept-
+[7] Heng-YuChi,Chun-ChiehChen,Wen-HuangCheng,andMing-SyanChen. preservingSocialImageSearchResultsSummarization.InACMSIGIR.
+2015.UbiShop:Commercialitemrecommendationusingvisualpart-basedobject [29] EdgarSimo-Serra,SanjaFidler,FrancescMoreno-Noguer,andRaquelUrtasun.
+representation.MultimediaToolsandApplicationsdoi:10.1007/s11042-015-2916-7 2015.NeuroaestheticsinFashion:ModelingthePerceptionofFashionability.In
+(2015). CVPR.
+[8] JoanClos.2013. StreetsasPublicSpacesandDriversofUrbanProsperity. UN- [30] EdgarSimo-SerraandHiroshiIshikawa.2016.FashionStylein128Floats:Joint
+HABITAT. RankingandClassificationusingWeakDataforFeatureExtraction.InCVPR.
+[9] CarlDoersch,SaurabhSingh,AbhinavGupta,JosefSivic,andAlexeiA.Efros. [31] KarenSimonyanandAndrewZisserman.2015.VeryDeepConvolutionalNet-
+2012.WhatmakesParislooklikeParis?.InACMSIGGRAPH. worksforLarge-ScaleImageRecognition.InICLR.
+[10] BrendanJ.FreyandDelbertDueck.2007. ClusteringbyPassingMessages [32] ZhengSong,MengWang,Xian-ShengHua,andShuichengYan.2011.Predicting
+BetweenDataPoints.Science315,1(February2007),972–976. occupationviahumanclothingandcontexts.InICCV.
+[11] HanchengGeandJamesCaverlee.2016. CollegeTowns,VacationSpots,and [33] Tsung-Hung Tsai, Wen-Huang Cheng, Chuang-Wen You, Min-Chun Hu,
+TechHubs:UsingGeo-SocialMediatoModelandCompareLocations.InAAAI. ArvinWenTsui,andHeng-YuChi.2014.LearningandRecognitionofOn-Premise
+[12] RuiningHeandJulianMcAuley.2016. UpsandDowns:ModelingtheVisual Signs(OPSs)fromWeaklyLabeledStreetViewImages. IEEETransactionson
+EvolutionofFashionTrendswithOne-classCollaborativeFiltering.InWWW. ImageProcessing23,3(March2014),1047–1059.
+[34] AndreasVeit,BalazsKovacs,SeanBell,JulianMcAuley,KavitaBala,andSerge
+[13] CharlesA.Heatwole.2006.Culture:AGeographicalPerspective.http://www.
+Belongie.2015. LearningVisualClothingStylewithHeterogeneousDyadic
+p12.nysed.gov/ciai/socst/grade3/geograph.html.(2006).
+Co-occurrences.InICCV.
+[14] ShintamiChusnulHidayati,Kai-LungHua,Wen-HuangCheng,andShih-Wei
+[35] VivekK.Verma.2016.$2.1trillionGlobalApparelMarketby2025:Decoding
+Sun.2014.WhataretheFashionTrendsinNewYork?.InACMMultimedia.
+opportunitiesforAfricanApparelIndustry.http://educationwithvivek.blogspot.
+[15] TianranHu,EricBigelow,andJieboLuo.2016.TalesofTwoCities:UsingSocial
+com.(2016).
+MediatoUnderstandIdiosyncraticLifestylesinDistinctiveMetropolitanAreas.
+[36] SudheendraVijayanarasimhanandKristenGrauman.2011. EfficientRegion
+IEEETransactionsonBigData(2016).
+SearchforObjectDetection.InCVPR.
+[16] JiaJia,JieHuang,GuangyaoShen,TaoHe,ZhiyuanLiu,HuanboLuan,andChao
+[37] SirionVittayakorn,KotaYamaguchi,andAlexanderC.Berg.2015.Runwayto
+Yan.2015.LearningtoAppreciatetheAestheticEffectsofClothing.InAAAI.
+Realway:VisualAnalysisofFashion.InWACV.
+[17] M.HadiKiapour,XufengHan,SvetlanaLazebnik,AlexanderC.Berg,and
+[38] L.C.Wang,X.Y.Zeng,L.Koehl,andY.Chen.2015.IntelligentFashionRecom-
+TamaraL.Berg.2015. WheretoBuyIt:MatchingStreetClothingPhotosin
+menderSystem:FuzzyLogicinPersonalizedGarmentDesign.IEEETransactions
+OnlineShops.InICCV.
+onHuman-MachineSystems45,1(February2015),95–109.
+[18] TekoingLim,Kai-LungHua,Hong-CyuanWang,Kai-WenZhao,Min-ChunHu,
+[39] BoWu,Wen-HuangCheng,YongdongZhang,andTaoMei.2016.TimeMatters:
+andWen-HuangCheng.2015. VRank:VotingSystemonRankingModelfor
+Multi-scaleTemporalizationofSocialMediaPopularity.InACMMM.
+HumanAgeEstimation.InMMSP.
+[40] BoWu,TaoMei,Wen-HuangCheng,andYongdongZhang.2016.UnfoldingTem-
+[19] SiLiu,LuoqiLiu,andShuichengYan.2014.FashionAnalysis:CurrentTechniques
+poralDynamics:PredictingSocialMediaPopularityUsingMulti-scaleTemporal
+andFutureDirections.IEEEMultimedia21,2(April-June2014),72–79.
+Decomposition.InAAAI.
+[20] ZiweiLiu,SijieYan,PingLuo,XiaogangWang,andXiaoouTang.2016.Fashion
+[41] KotaYamaguchi,M.HadiKiapour,andTamaraL.Berg.2013.PaperDollParsing:
+LandmarkDetectionintheWild.InECCV.
+RetrievingSimilarStylestoParseClothingItems.InICCV.
+[21] I.Ljubic,R.Weiskircher,U.Pferschy,G.W.Klau,P.Mutzel,andM.Fischetti.2006.
+[42] JasonYosinski,JeffClune,AnhNguyen,ThomasFuchs,andHodLipson.2015.
+Analgorithmicframeworkfortheexactsolutionoftheprize-collectingSteiner
+UnderstandingNeuralNetworksThroughDeepVisualization.InICMLWork-
+treeproblem.MathematicalProgramming105,2-3(February2006),427–449.
+shop.
+[22] BabakLoni,LeiYenCheung,MichaelRiegler,AlessandroBozzon,LukeGottlieb,
+[43] DongfeiYu,XinmeiTian,andTaoMei.2015.OntheSelectionofTrendingImage
+andMarthaLarson.2014.Fashion10000:anenrichedsocialimagedatasetfor
+fromtheWeb.InICME.
+fashionandclothing.InMMSys.
+[44] BoleiZhou,LiuLiu,AudeOliva,andAntonioTorralba.2014.RecognizingCity
+IdentityviaAttributeAnalysisofGeo-taggedImages.InECCV.
+99
+View publication stats
+
